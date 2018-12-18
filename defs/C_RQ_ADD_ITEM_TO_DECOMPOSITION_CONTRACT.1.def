@@ -1,0 +1,5 @@
+# max 20 items at once
+uint32 contractId # type 89
+uint64 dbid
+int32 id
+uint32 count

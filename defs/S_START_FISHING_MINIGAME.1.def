@@ -1,0 +1,5 @@
+int32 rodId
+uint64 gameId
+int32 level
+uint32 unk1
+uint32 unk2

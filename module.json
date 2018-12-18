@@ -1,0 +1,12 @@
+{
+	"disableAutoUpdate": false,
+	"name": "let-me-fish",
+	"author": "Owyn",
+	"description": "Auto-fishes, auto-crafts bait, auto-dismantles fish for you",
+	"options": {
+		"niceName": "Let-me-Fish",
+		"guiName": "Let me Fish"
+	},
+	"servers": ["https://raw.githubusercontent.com/Owyn/let-me-fish/master/"],
+	"supportUrl": "https://github.com/Owyn/let-me-fish/issues"
+}
