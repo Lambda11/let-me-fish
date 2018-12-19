@@ -10,17 +10,17 @@ Supports `auto-nego`tiate (my fork https://github.com/Owyn/auto-nego ), so you w
 ## Usage
 Use command `fish` then follow instruction as simple as just throwing your fish-rod and it will auto-continue everything for you
 
-`fish save` - saves your used recipe and list of fishes to auto-dismantle into per-character config file which will be used on next login
-`fish reset` - resets your loaded config
-`fish list` - lists settings used
-`fish reload` - reloads config file (if you edited it manually and want to reload it right now)
+`fish save` - saves your used recipe and list of fishes to auto-dismantle into per-character config file which will be used on next login  
+`fish reset` - resets your loaded config  
+`fish list` - lists settings used  
+`fish reload` - reloads config file (if you edited it manually and want to reload it right now)  
 
 - you can set a different recipe or add fishes to auto-dismantle-list after using `fish` command but before throwing your rod any time
 
 
 ## Installation
-put `defs` insides to `node_modules\tera-data\protocol\` folder
-put `opcodes` insides to `node_modules\tera-data\map\` (in Caalis proxy)
+put `defs` insides to `node_modules\tera-data\protocol\` folder  
+put `opcodes` insides to `node_modules\tera-data\map\` (in Caalis proxy)  
 
 (You might need to do additional manual updates if you'r using Pinkies proxy, but you must be used to that already with it)
 
