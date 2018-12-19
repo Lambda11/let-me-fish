@@ -5,7 +5,7 @@ TERA-proxy module that mass-auto-fishes fishes, auto-crafts bait when out of bai
 
 Emulates human-like behavior mostly, abides human-like delays for actions based on fishing diffculty, retries if something goes wrong, works well even if the game is very limited in CPU resources.
 
-Supports `auto-nego`tiate (my fork https://github.com/Owyn/auto-nego ), so you would be able to both auto-fish and auto-negotiate
+Supports `auto-nego`tiate (with this fork https://github.com/Owyn/auto-nego ), so you would be able to both auto-fish and auto-negotiate
 
 ## Usage
 Use command `fish` then follow instruction as simple as just throwing your fish-rod and it will auto-continue everything for you

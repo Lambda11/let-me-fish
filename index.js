@@ -1,6 +1,6 @@
-const	ACTION_DELAY_THROW_ROD	= [6123, 6798],		// [Min, Max] in ms, 1000 ms = 1 sec
-		ACTION_DELAY_FISH_START	= [845,  2656],		// [Min, Max] - the pressing of F button to reel and start the minigame
-		ACTION_DELAY_FISH_CATCH	= [6564, 16453],	// [Min, Max] - time to win the fishing minigame and get a fish as prize
+const	ACTION_DELAY_THROW_ROD	= [6023, 6798],		// [Min, Max] in ms, 1000 ms = 1 sec
+		ACTION_DELAY_FISH_START	= [1345, 2656],		// [Min, Max] - the pressing of F button to reel and start the minigame
+		ACTION_DELAY_FISH_CATCH	= [5564, 15453],	// [Min, Max] - time to win the fishing minigame and get a fish as prize
 		DELAY_BASED_ON_FISH_TIER= true; // tier 4 would get caught 4 sec longer, BAF (tier 11) would get caught 11 sec longer etc
 
 const   path = require('path'),
@@ -289,12 +289,12 @@ module.exports = function LetMeFish(mod) {
 					{
 						mod.toServer('C_REQUEST_CONTRACT', 1, {type: 89});
 					}
-					timer = setTimeout(dismantle_put_in_one_fish, rng(ACTION_DELAY_FISH_START));
+					timer = setTimeout(dismantle_put_in_one_fish, (rng(ACTION_DELAY_FISH_START)+1000));
 				}
 				else
 				{
-					command.message("No fishes found in your inventory, can't free up space, stopping");
-					console.log("No fishes found in your inventory, can't free up space, stopping");
+					command.message("No fishes-to-dismantle found in your inventory, can't free up space, stopping");
+					console.log("No fishes-to-dismantle found in your inventory, can't free up space, stopping");
 					Stop();
 				}
 			}
@@ -330,8 +330,8 @@ module.exports = function LetMeFish(mod) {
 		}
 		else
 		{
-			command.message("Hmmm... we didn't get a contract for dismantlying for some reason");
-			Stop();
+			command.message("Hmmm... we didn't get a contract for dismantlying for some reason (lag?)... lets try again");
+			timer = setTimeout(cleanup_by_dismantle, (rng(ACTION_DELAY_FISH_START)+1500));
 		}
 	}
 	
@@ -361,7 +361,10 @@ module.exports = function LetMeFish(mod) {
 			id: vContractId
 		});
 		vContractId = null;
-		timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD)); // lets resume fishing
+		if(enabled)
+		{
+			timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD)); // lets resume fishing
+		}
 	}
 	
 	function craft_bait_start()
