@@ -133,6 +133,9 @@ module.exports = function LetMeFish(mod) {
 		load() {
 			command.message("reLoaded settings file");
 			gSettings = loadSettings();
+			toDismantle = gSettings.toDismantle;
+			craftId = gSettings.craftId;
+			baitId = gSettings.baitId;
 		}
 	});
 	
