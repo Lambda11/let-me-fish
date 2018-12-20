@@ -77,7 +77,7 @@ module.exports = function LetMeFish(mod) {
 	}
 
 	command.add('fish', {
-        $default() {
+        $none() {
             enabled = !enabled;
 			command.message(`Let me Fish is now: ${enabled ? "enabled" : "disabled"}.`);
 			if(enabled)
@@ -99,6 +99,9 @@ module.exports = function LetMeFish(mod) {
 				Stop();
 			}
         },
+		$default() {
+			mod.command.message('Error (typo?) in command! see README for the list of valid commands')
+		},
 		reset() {
 			toDismantle = {};
 			craftId = 0;
