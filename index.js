@@ -98,9 +98,9 @@ module.exports = function LetMeFish(mod) {
 			{
 				Stop();
 			}
-        },
+		},
 		$default() {
-			mod.command.message('Error (typo?) in command! see README for the list of valid commands')
+			command.message('Error (typo?) in command! see README for the list of valid commands')
 		},
 		reset() {
 			toDismantle = {};
