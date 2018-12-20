@@ -13,7 +13,7 @@ Use command `fish` then follow instruction as simple as just throwing your fish-
 `fish save` - saves your used recipe and list of fishes to auto-dismantle into per-character config file which will be used on next login  
 `fish reset` - resets your loaded config  
 `fish list` - lists settings used  
-`fish reload` - reloads config file (if you edited it manually and want to reload it right now)  
+`fish load` - reLoads config file (if you edited it manually and want to reload it right now)  
 
 - you can set a different recipe or add fishes to auto-dismantle-list after using `fish` command but before throwing your rod any time
 
@@ -26,7 +26,7 @@ put `opcodes` insides to `node_modules\tera-data\map\` (in Caalis proxy)
 
 ## Notes
 
-- Stops when you get 10k fishlets (if you want to auto-discard fishlets - reconsider your fishing life in tera, fishlets are the main purpose for fishing after you upgrade your rod... ofc you could use side modules for that like https://github.com/teralove/no-strongboxes and adding fishlet id there)
+- Stops when you get 10k fishlets (if you want to auto-discard fishlets - reconsider your fishing life in tera, fishlets are the main purpose for fishing after you upgrade your rod... ofc you could use side modules for that like https://github.com/teralove/no-strongboxes and adding fishlet id there and a check for amount so it won't delete all fishlets so you won't be able to craft bait)
 
 - Opcodes are gotten via third-party sources mostly (submitted by users), if there are no opcodes for your region - too bad, you'd have to get em yourself, can't help you here, use https://github.com/Owyn/alex-packet-id-finder or https://github.com/Owyn/debug-logger/
 

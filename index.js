@@ -589,15 +589,15 @@ module.exports = function LetMeFish(mod) {
 				console.log("Fishing area changed (you left it?), well that happens... Retrying...");
 				clearTimeout(timer);
 				leftArea++;
-				if(leftArea < 6)
+				if(leftArea < 7)
 				{
 					timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
 				}
 				else
 				{
 					Stop();
-					command.message("Fishing area changed for good it seems, can't fish anymore, stopping");
-					console.log("Fishing area changed for good it seems, can't fish anymore, stopping");
+					command.message("Fishing area changed for good it seems, can't fish anymore, - choose better place next time, stopping");
+					console.log("Fishing area changed for good it seems, can't fish anymore, - choose better place next time, stopping");
 				}
 			}
 			else if(msg.id === 'SMT_FISHING_RESULT_CANCLE') // hmmm?
