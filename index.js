@@ -611,7 +611,7 @@ module.exports = function LetMeFish(mod) {
 				command.message("Fishing cancelled... lets try again?");
 				console.log("Fishing cancelled... due to lag? Retrying...");
 				clearTimeout(timer);
-				timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
+				timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_FISH_START));
 			}
 			else if(negoWaiting && !pendingDeals.length && msg.id === 'SMT_MEDIATE_SUCCESS_SELL') // all out of deals and still waiting?
 			{
