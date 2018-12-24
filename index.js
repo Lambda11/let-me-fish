@@ -378,7 +378,7 @@ module.exports = function LetMeFish(mod) {
 		if(craftId)
 		{
 			let filets = invenItems.find((item) => item.id === 204052);
-			if(filets && filets.amount >= 30)
+			if(filets && filets.amount >= 60) // need one more to trigger "can't craft more bait"
 			{
 				triedDismantling = false;
 				mod.toServer('C_START_PRODUCE', 1, {recipe:craftId, unk: 0});
@@ -512,9 +512,9 @@ module.exports = function LetMeFish(mod) {
 			if(!enabled || scanning || event.type != 89 || event.id != vContractId || event.senderId !== myGameId) return;
 			
 			vContractId = null;
-			command.message("Contract for dismantling cancelled (not by let-me-fish), retrying dismantling sequence...");
+			command.message("Contract for dismantling cancelled (not by let-me-fish), retrying fishing sequence...");
 			clearTimeout(timer);
-			timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_THROW_ROD));
+			timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
 		});
 
 		Hook('C_START_PRODUCE', 1, event =>{
