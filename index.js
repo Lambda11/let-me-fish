@@ -24,7 +24,8 @@ module.exports = function LetMeFish(mod) {
 		statFished = 0,
 		statFishedTiers = {},
 		hooks = [],
-		toDismantle = {},
+		dismantleFish = true,
+		dismantleFishGold = false,
 		thefishes = [],
 		curTier = 0,
 		timer = null,
@@ -32,6 +33,7 @@ module.exports = function LetMeFish(mod) {
 		baitId = 0,
 		craftId = 0,
 		leftArea = 0,
+		putinfishes = 0,
 		playerLoc = null,
 		vContractId = null,
 		invenItems = [],
@@ -84,15 +86,13 @@ module.exports = function LetMeFish(mod) {
 			{
 				start();
 				scanning = true;
+				let stepN = 1;
 				if(!craftId)
 				{
-					command.message("1) Click craft on a bait recipe you want to auto-craft");
+					command.message(stepN + ") Click craft on a bait recipe you want to auto-craft");
+					stepN++;
 				}
-				if(!Object.keys(toDismantle).length)
-				{
-					command.message("2) Put all fish-types you want to auto-dismantle into dismantle window");
-				}
-				command.message("3) Throw your rod - and it will auto-start");
+				command.message(stepN + ") Throw your rod - and it will auto-start");
 			}
 			else
 			{
@@ -102,43 +102,50 @@ module.exports = function LetMeFish(mod) {
 		$default() {
 			command.message('Error (typo?) in command! see README for the list of valid commands')
 		},
+		dismantle() {
+			dismantleFish = !dismantleFish;
+			command.message(`Common Fish dismantling is now: ${dismantleFish ? "enabled" : "disabled"}.`);
+		},
+		gold() {
+			dismantleFishGold = !dismantleFishGold;
+			command.message(`Gold Fish dismantling is now: ${dismantleFishGold ? "enabled" : "disabled"}.`);
+		},
 		reset() {
-			toDismantle = {};
+			dismantleFish = true;
+			dismantleFishGold = false;
 			craftId = 0;
 			baitId = 0;
 			command.message("Craft recipe reseted");
 			command.message("Bait type for reuse reseted");
-			command.message("List of fishes to auto-dismantle reseted");
+			command.message("Types of fishes to auto-dismantle reseted");
 		},
 		list() {
 			command.message("Recipe for auto-craft: " + (craftId ? craftId : "none"));
 			command.message("Bait for reusing after craft: " + (baitId ? baitId : "none"));
-			command.message("Fish-List to auto-dismantle (" + (Object.keys(toDismantle).length) + "):");
-			if(Object.keys(toDismantle).length)
-			{
-				for(let i in toDismantle)
-				{
-					command.message(i);
-				}
-			}
-			else
-			{
-				command.message("none");
-			}
+			command.message("Fish auto-dismantling for common fish: " + dismantleFish + ", for goldfish: " + dismantleFishGold);
 		},
 		save() {
 			command.message("Settings saved and would be carried over to next session on this character");
-			gSettings.toDismantle = toDismantle;
+			gSettings.dismantleFish = dismantleFish;
+			gSettings.dismantleFishGold = dismantleFishGold;
 			gSettings.craftId = craftId;
-			gSettings.baitId = baitId;
 			saveSettings(gSettings);
 		},
 		load() {
 			command.message("reLoaded settings file");
 			gSettings = loadSettings();
-			toDismantle = gSettings.toDismantle;
+			dismantleFish = gSettings.dismantleFish;
+			dismantleFishGold = gSettings.dismantleFishGold;
 			craftId = gSettings.craftId;
-			baitId = gSettings.baitId;
+			let found = BAIT_RECIPES.find(obj => obj.recipeId === craftId);
+			if(found)
+			{
+				baitId = found.itemId;
+			}
+			else
+			{
+				command.message("Your config file is corrupted, bait recipe id is wrong");
+			}
 		}
 	});
 	
@@ -159,6 +166,7 @@ module.exports = function LetMeFish(mod) {
 	{
 		enabled = false
 		vContractId = null;
+		putinfishes = 0;
 		unload();
 		clearTimeout(timer);
 		if(!scanning)
@@ -269,12 +277,16 @@ module.exports = function LetMeFish(mod) {
 	{
 		if(enabled)
 		{
-			if(Object.keys(toDismantle).length)
+			if(dismantleFish || dismantleFishGold)
 			{
 				thefishes.length = 0;
-				for(let i in toDismantle)
+				if(dismantleFish)
 				{
-					 thefishes = thefishes.concat(invenItems.filter((item) => item.id === parseInt(i,10)));
+					 thefishes = thefishes.concat(invenItems.filter((item) => item.id >= 206400 && item.id <= 206435));
+				}
+				if(dismantleFishGold)
+				{
+					 thefishes = thefishes.concat(invenItems.filter((item) => item.id >= 206500 && item.id <= 206505));
 				}
 				if(thefishes.length > 20)
 				{
@@ -306,7 +318,7 @@ module.exports = function LetMeFish(mod) {
 			}
 			else
 			{
-				command.message("You didn't provide a list of fishes to auto-dismantle, did you? Now let-me-fish can't free up inventory space for you...");
+				command.message("You disabled auto-dismantle, didn't you? Now let-me-fish can't free up inventory space for you... Stopping");
 				Stop();
 			}
 		}
@@ -317,7 +329,7 @@ module.exports = function LetMeFish(mod) {
 		if(vContractId)
 		{
 			const thefish = thefishes.pop();
-			
+			putinfishes++;
 			mod.toServer('C_RQ_ADD_ITEM_TO_DECOMPOSITION_CONTRACT', 1, {
 				contractId: vContractId,
 				dbid: thefish.dbid,
@@ -349,6 +361,7 @@ module.exports = function LetMeFish(mod) {
 	
 	function dismantle_start()
 	{
+		putinfishes = 0;
 		mod.toServer('C_RQ_COMMIT_DECOMPOSITION_CONTRACT', 1, {contract: vContractId});
 		if(too_much_fishes)
 		{
@@ -412,21 +425,33 @@ module.exports = function LetMeFish(mod) {
 		invenItems = [];
 		rodId = null;
 		vContractId = null;
+		putinfishes = 0;
 		settingsFileName = `./saves/${event.name}-${event.serverId}.json`;
-		gSettings = loadSettings();
-		if(!Object.keys(gSettings).length)
+		let lSettings = loadSettings();
+		if(!Object.keys(lSettings).length)
 		{
 			baitId = 0;
 			craftId = 0;
-			toDismantle = {}
+			dismantleFish = true;
+			dismantleFishGold = false;
 		}
 		else
 		{
-			toDismantle = gSettings.toDismantle;
-			craftId = gSettings.craftId;
-			baitId = gSettings.baitId;
+			dismantleFish = lSettings.dismantleFish || true;
+			dismantleFishGold = lSettings.dismantleFishGold || false;
+			craftId = lSettings.craftId || 0;
+			let found = BAIT_RECIPES.find(obj => obj.recipeId === craftId);
+			if(found)
+			{
+				baitId = found.itemId;
+			}
+			else
+			{
+				command.message("Your config file is corrupted, bait recipe id is wrong");
+				console.log("Your config file is corrupted, bait recipe id is wrong");
+			}
 			/*console.log("LOADED SETTINGS: ");
-			console.log(toDismantle);
+			console.log(dismantleFish);
 			console.log(craftId);
 			console.log(baitId);*/
 		}
@@ -475,9 +500,9 @@ module.exports = function LetMeFish(mod) {
 					{
 						command.message("You didn't provide a bait recipe for auto-craft, let-me-fish will stop once it runs out of bait...");
 					}
-					if(!Object.keys(toDismantle).length)
+					if(!dismantleFish)
 					{
-						command.message("You didn't provide a list of fishes to auto-dismantle, let-me-fish will stop once inventory runs out of space...");
+						command.message("You turned OFF fish auto-dismantling for common fish, let-me-fish will stop once inventory runs out of space...");
 					}
 					command.message("Auto-fishing is started now");
 				}
@@ -490,15 +515,6 @@ module.exports = function LetMeFish(mod) {
 			if(!enabled) return;
 			
 			invenItems = event.first ? event.items : invenItems.concat(event.items);
-		});
-		
-		Hook('C_RQ_ADD_ITEM_TO_DECOMPOSITION_CONTRACT', 1, event =>{
-			if(!scanning) return;
-			
-			toDismantle[event.id] = true;
-			command.message("Now fish with this id would get auto-dismantled: " + event.id);
-			//console.log("size of toDismantle now: " + (Object.keys(toDismantle).length));
-			//console.log(toDismantle);
 		});
 		
 		Hook('S_REQUEST_CONTRACT', 1, event =>{
@@ -543,7 +559,7 @@ module.exports = function LetMeFish(mod) {
 		});
 		
 		Hook('S_TRADE_BROKER_DEAL_SUGGESTED', 1, event => {
-			if(hasNego && !negoWaiting && event.offeredPrice === event.sellerPrice) // lets take a break and trade shall we?
+			if(enabled && !scanning && hasNego && !negoWaiting && event.offeredPrice === event.sellerPrice) // lets take a break and trade shall we?
 			{
 				for(let i = 0; i < pendingDeals.length; i++)
 				{
@@ -580,7 +596,18 @@ module.exports = function LetMeFish(mod) {
 				{
 					command.message("You have reached the 10k dismantled fish parts limit, stopping");
 					console.log("You have reached the 10k dismantled fish parts limit, stopping");
-					Stop();
+					clearTimeout(timer);
+					if(putinfishes)
+					{
+						too_much_fishes = false;
+						enabled = false;
+						dismantle_start0();
+						setTimeout(Stop, (rng(ACTION_DELAY_FISH_START)+4000));
+					}
+					else
+					{
+						Stop();
+					}
 				}
 			}
 			else if(msg.id === 'SMT_CANNOT_FISHING_FULL_INVEN') // full inven
@@ -612,6 +639,13 @@ module.exports = function LetMeFish(mod) {
 				console.log("Fishing cancelled... due to lag? Retrying...");
 				clearTimeout(timer);
 				timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_FISH_START));
+			}
+			else if(msg.id === 'SMT_YOU_ARE_BUSY') // anti-anit-bot
+			{
+				command.message("Evil people trying to disturb your fishing... lets try again?");
+				console.log("Evil people trying to disturb your fishing... Retrying...");
+				clearTimeout(timer);
+				timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
 			}
 			else if(negoWaiting && !pendingDeals.length && msg.id === 'SMT_MEDIATE_SUCCESS_SELL') // all out of deals and still waiting?
 			{
