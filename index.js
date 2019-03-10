@@ -277,6 +277,7 @@ module.exports = function LetMeFish(mod) {
 	{
 		if(enabled)
 		{
+			clearTimeout(timer);
 			if(dismantleFish || dismantleFishGold)
 			{
 				thefishes.length = 0;
@@ -290,6 +291,7 @@ module.exports = function LetMeFish(mod) {
 				}
 				if(thefishes.length > 20)
 				{
+					command.message("Found total fishes: " + thefishes.length);
 					too_much_fishes = true;
 					while(thefishes.length > 20)
 					{
@@ -302,7 +304,7 @@ module.exports = function LetMeFish(mod) {
 				}
 				if(thefishes.length)
 				{
-					command.message("Gonna dismantle this much fishes: " + thefishes.length);
+					command.message("Gonna dismantle this much fishes now: " + thefishes.length);
 					if(!vContractId)
 					{
 						mod.toServer('C_REQUEST_CONTRACT', 1, {type: 89});
