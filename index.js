@@ -283,7 +283,7 @@ module.exports = function LetMeFish(mod) {
 				thefishes.length = 0;
 				if(dismantleFish)
 				{
-					 thefishes = thefishes.concat(invenItems.filter((item) => item.id >= 206400 && item.id <= 206435));
+					 thefishes = invenItems.filter((item) => item.id >= 206400 && item.id <= 206435);
 				}
 				if(dismantleFishGold)
 				{
@@ -309,7 +309,7 @@ module.exports = function LetMeFish(mod) {
 					{
 						mod.toServer('C_REQUEST_CONTRACT', 1, {type: 89});
 					}
-					timer = setTimeout(dismantle_put_in_one_fish, (rng(ACTION_DELAY_FISH_START)+1000));
+					timer = setTimeout(dismantle_put_in_one_fish, (rng(ACTION_DELAY_FISH_START)+2000));
 				}
 				else
 				{
@@ -367,7 +367,7 @@ module.exports = function LetMeFish(mod) {
 		mod.toServer('C_RQ_COMMIT_DECOMPOSITION_CONTRACT', 1, {contract: vContractId});
 		if(too_much_fishes)
 		{
-			cleanup_by_dismantle();
+			timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START));
 		}
 		else
 		{
