@@ -367,7 +367,7 @@ module.exports = function LetMeFish(mod) {
 		mod.toServer('C_RQ_COMMIT_DECOMPOSITION_CONTRACT', 1, {contract: vContractId});
 		if(too_much_fishes)
 		{
-			timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START));
+			timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)+1500);
 		}
 		else
 		{
