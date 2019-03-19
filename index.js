@@ -166,6 +166,7 @@ module.exports = function LetMeFish(mod) {
 	{
 		enabled = false
 		vContractId = null;
+		too_much_fishes = false;
 		putinfishes = 0;
 		unload();
 		clearTimeout(timer);
@@ -367,7 +368,7 @@ module.exports = function LetMeFish(mod) {
 		mod.toServer('C_RQ_COMMIT_DECOMPOSITION_CONTRACT', 1, {contract: vContractId});
 		if(too_much_fishes)
 		{
-			timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)+1500);
+			//timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)+1500);
 		}
 		else
 		{
@@ -517,6 +518,12 @@ module.exports = function LetMeFish(mod) {
 			if(!enabled) return;
 			
 			invenItems = event.first ? event.items : invenItems.concat(event.items);
+			
+			if(too_much_fishes && putinfishes === 0 && !event.more)
+			{
+				timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)/3);
+				command.message("Inventory fully updated, starting dismantling of the next batch of fish");
+			}
 		});
 		
 		Hook('S_REQUEST_CONTRACT', 1, event =>{
