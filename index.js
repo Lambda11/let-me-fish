@@ -34,6 +34,7 @@ module.exports = function LetMeFish(mod) {
 		craftId = 0,
 		leftArea = 0,
 		putinfishes = 0,
+		awaiting_dismantling = 0,
 		playerLoc = null,
 		vContractId = null,
 		invenItems = [],
@@ -293,6 +294,7 @@ module.exports = function LetMeFish(mod) {
 				if(thefishes.length > 20)
 				{
 					command.message("Found total fishes: " + thefishes.length);
+					awaiting_dismantling = thefishes.length;
 					too_much_fishes = true;
 					while(thefishes.length > 20)
 					{
@@ -312,11 +314,24 @@ module.exports = function LetMeFish(mod) {
 					}
 					timer = setTimeout(dismantle_put_in_one_fish, (rng(ACTION_DELAY_FISH_START)+2000));
 				}
-				else
+				else if(!awaiting_dismantling)
 				{
 					command.message("No fishes-to-dismantle found in your inventory, can't free up space, stopping");
 					console.log("No fishes-to-dismantle found in your inventory, can't free up space, stopping");
 					Stop();
+				}
+				else // what the fuck is this shit
+				{
+					command.message("There is still " + awaiting_dismantling + " fishes awaiting dismantling but we couldn't find them in the inventory, lets ignore them for now and continue fishing");
+					console.log("There is still " + awaiting_dismantling + " fishes awaiting dismantling but we couldn't find them in the inventory, lets ignore them for now and continue fishing"); 
+					console.log("Please send inventory snapshot below to issues for further investigation (don't forget to hide your gameID at top there)");
+					console.log("inventory: (reported empty of fish)");
+					console.log(invenItems);
+					console.log("fish array (reported empty): ");
+					console.log(thefishes);
+					awaiting_dismantling = 0;
+					setTimeout(dismantle_start2, rng(ACTION_DELAY_FISH_START));
+					timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
 				}
 			}
 			else
@@ -364,6 +379,7 @@ module.exports = function LetMeFish(mod) {
 	
 	function dismantle_start()
 	{
+		awaiting_dismantling =- putinfishes;
 		putinfishes = 0;
 		mod.toServer('C_RQ_COMMIT_DECOMPOSITION_CONTRACT', 1, {contract: vContractId});
 		if(too_much_fishes)
@@ -378,11 +394,14 @@ module.exports = function LetMeFish(mod) {
 	
 	function dismantle_start2()
 	{
-		mod.toServer('C_CANCEL_CONTRACT', 1, {
-			type: 89,
-			id: vContractId
-		});
-		vContractId = null;
+		if(vContractId)
+		{
+			mod.toServer('C_CANCEL_CONTRACT', 1, {
+				type: 89,
+				id: vContractId
+			});
+			vContractId = null;
+		}
 		if(enabled)
 		{
 			timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD)); // lets resume fishing
@@ -521,8 +540,8 @@ module.exports = function LetMeFish(mod) {
 			
 			if(too_much_fishes && putinfishes === 0 && !event.more)
 			{
+				setTimeout(function() { command.message("Inventory fully updated, starting dismantling of the next batch of fish"); }, ACTION_DELAY_FISH_START[0]/3);
 				timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)/3);
-				command.message("Inventory fully updated, starting dismantling of the next batch of fish");
 			}
 		});
 		
