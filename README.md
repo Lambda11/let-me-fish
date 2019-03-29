@@ -24,8 +24,8 @@ Use command `fish` then follow instruction as simple as just throwing your fish-
 put `defs` insides to `node_modules\tera-data\protocol\` folder  
 put `opcodes` insides to `node_modules\tera-data\map\` (in Caalis proxy that's a folder for opcodes in **addition** to standart ones) (In Pinkies you'd have to merge contents of those files with ones you already have, I think)
 
-`ERROR: Error: [dispatch] hook: unmapped packet ` means you have no opcodes installed correctly for your current game version
-`unsupported packet ` means you have no defs installed correctly
+`ERROR: Error: [dispatch] hook: unmapped packet ` means you have no opcodes installed correctly for your current game version  
+`unsupported packet ` means you have no defs installed correctly  
 
 
 ## Notes

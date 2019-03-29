@@ -226,7 +226,6 @@ module.exports = function LetMeFish(mod) {
 		else if(baitId && !invenItems.filter((item) => item.id === baitId).length)
 		{
 			command.message("No bait found in inventory, lets craft some!");
-			clearTimeout(timer);
 			timer = setTimeout(craft_bait_start, rng(ACTION_DELAY_FISH_START)/4);
 		}
 		else if(rodId)
