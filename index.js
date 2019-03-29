@@ -223,6 +223,12 @@ module.exports = function LetMeFish(mod) {
 			negoWaiting = true;
 			timer = setTimeout(throw_the_rod, (rng(ACTION_DELAY_THROW_ROD)*6));
 		}
+		else if(baitId && !invenItems.filter((item) => item.id === baitId).length)
+		{
+			command.message("No bait found in inventory, lets craft some!");
+			clearTimeout(timer);
+			timer = setTimeout(craft_bait_start, rng(ACTION_DELAY_FISH_START)/4);
+		}
 		else if(rodId)
 		{
 			negoWaiting = false;
@@ -413,7 +419,7 @@ module.exports = function LetMeFish(mod) {
 		if(craftId)
 		{
 			let filets = invenItems.find((item) => item.id === 204052);
-			if(filets && filets.amount >= 60) // need one more to trigger "can't craft more bait"
+			if(filets && filets.amount >= 30) // need one more to trigger "can't craft more bait"
 			{
 				triedDismantling = false;
 				mod.toServer('C_START_PRODUCE', 1, {recipe:craftId, unk: 0});
@@ -423,6 +429,11 @@ module.exports = function LetMeFish(mod) {
 				triedDismantling = true;
 				timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_THROW_ROD));
 				command.message("You don't have enough fish parts to craft a bait... dismantling fishes to get some");
+			}
+			else if(invenItems.filter((item) => item.id === baitId).length) // managed to craft few
+			{
+				command.message("Crafted few bait items, then ran out of fish parts, but lets fish again anyway with what we have now!");
+				timer = setTimeout(use_bait_item, rng(ACTION_DELAY_FISH_START));
 			}
 			else
 			{

@@ -22,9 +22,11 @@ Use command `fish` then follow instruction as simple as just throwing your fish-
 
 ## Installation
 put `defs` insides to `node_modules\tera-data\protocol\` folder  
-put `opcodes` insides to `node_modules\tera-data\map\` (in Caalis proxy) (In Pinkies you'd have to merge contents of those files with ones you already have)
+put `opcodes` insides to `node_modules\tera-data\map\` (in Caalis proxy that's a folder for opcodes in **addition** to standart ones) (In Pinkies you'd have to merge contents of those files with ones you already have, I think)
 
-(You might need to do additional manual updates if you'r using Pinkies proxy, but you must be used to that already with it)
+`ERROR: Error: [dispatch] hook: unmapped packet ` means you have no opcodes installed correctly for your current game version
+`unsupported packet ` means you have no defs installed correctly
+
 
 ## Notes
 
@@ -34,4 +36,4 @@ put `opcodes` insides to `node_modules\tera-data\map\` (in Caalis proxy) (In Pin
 
 - Yes, you can make it catch fish much faster like other cheating fishers do, even like in 2 sec lol, but server might decide to start checking how long it takes for ppl to actually catch  fish and ban all unreasonably fast fishers, so only way to change this timing is to set `disableAutoUpdate` to `true` in `module.json` and edit top lines in the `index.js` file manually at your very own risk
 
-- Make sure you have some free slots in the inventory before fishing and some bait\fish filet to craft 50 bait before you start the `fish`
+- Make sure you have some free slots in the inventory before fishing and some bait\fish\fish filet to craft bait before you start the `fish`
