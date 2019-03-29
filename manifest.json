@@ -1,7 +1,7 @@
 {
 	"files": {
 		"README.md": "1e0b23d8a1365ba65228e8d4bd36a6ac5924e3c007cb83856e8c7f82793ba356",
-		"index.js": "476c19464255406eafc5a0abfb9bc6528fcce20d68ca177697b78bc08d081a55",
+		"index.js": "b617e9b616c32bcf883e5fcd4ede376fe025d952f77226630e88fd520323bb26",
 		"module.json": "7707b849da8cd8b1ef750c36e0ab699ae98590f8a7426cd08c9a504c9396b074"
 	},
 	"defs": {
@@ -18,7 +18,7 @@
 		"S_CANCEL_CONTRACT": 1,
 		"S_END_PRODUCE": 1,
 		"S_FISHING_BITE": 1,
-		"S_INVEN": 17,
+		"S_INVEN": [17,18],
 		"S_LOGIN": 12,
 		"S_REQUEST_CONTRACT": 1,
 		"S_START_FISHING_MINIGAME": 1,
