@@ -352,13 +352,16 @@ module.exports = function LetMeFish(mod) {
 		if(vContractId)
 		{
 			const thefish = thefishes.pop();
-			putinfishes++;
-			mod.toServer('C_RQ_ADD_ITEM_TO_DECOMPOSITION_CONTRACT', 1, {
-				contractId: vContractId,
-				dbid: thefish.dbid,
-				id: thefish.id,
-				count: 1
-			});
+			if(thefish)
+			{
+				putinfishes++;
+				mod.toServer('C_RQ_ADD_ITEM_TO_DECOMPOSITION_CONTRACT', 1, {
+					contractId: vContractId,
+					dbid: thefish.dbid,
+					id: thefish.id,
+					count: 1
+				});
+			}
 
 			if(thefishes.length)
 			{
