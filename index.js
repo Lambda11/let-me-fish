@@ -43,7 +43,8 @@ module.exports = function LetMeFish(mod) {
 		settingsFileName,
 		hasNego = mod.manager.isLoaded('auto-nego'),
 		pendingDeals = [],
-		negoWaiting = false;
+		negoWaiting = false,
+		DismantlingOnAction = false;
 	
 	function saveSettings(obj)
 	{
@@ -168,6 +169,7 @@ module.exports = function LetMeFish(mod) {
 		enabled = false
 		vContractId = null;
 		too_much_fishes = false;
+		DismantlingOnAction = false;
 		putinfishes = 0;
 		unload();
 		clearTimeout(timer);
@@ -287,6 +289,7 @@ module.exports = function LetMeFish(mod) {
 			clearTimeout(timer);
 			if(dismantleFish || dismantleFishGold)
 			{
+				DismantlingOnAction = true;
 				thefishes.length = 0;
 				if(dismantleFish)
 				{
@@ -374,6 +377,7 @@ module.exports = function LetMeFish(mod) {
 		}
 		else
 		{
+			DismantlingOnAction = false;
 			command.message("Hmmm... we didn't get a contract for dismantlying for some reason (lag?)... lets try again");
 			timer = setTimeout(cleanup_by_dismantle, (rng(ACTION_DELAY_FISH_START)+1500));
 		}
@@ -404,6 +408,7 @@ module.exports = function LetMeFish(mod) {
 	{
 		if(vContractId)
 		{
+			DismantlingOnAction = false;
 			mod.toServer('C_CANCEL_CONTRACT', 1, {
 				type: 89,
 				id: vContractId
@@ -653,6 +658,7 @@ module.exports = function LetMeFish(mod) {
 			}
 			else if(msg.id === 'SMT_CANNOT_FISHING_FULL_INVEN') // full inven
 			{
+				if(DismantlingOnAction) return; // Patch 80.04 has bug where it sends this twice in row with timeout of 120 millieseconds between each, Here this check to prevent the requesting contract again then it cause it to cancel the first. Ps, It doesn't happen always, but 80% of the time.
 				command.message("Inventory full, lets dismantle fish!");
 				clearTimeout(timer);
 				timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START));

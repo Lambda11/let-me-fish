@@ -1,12 +1,12 @@
 {
-	"disableAutoUpdate": false,
-	"name": "let-me-fish",
-	"author": "Lambda11",
-	"description": "Auto-fishes, auto-crafts bait, auto-dismantles fish for you",
-	"options": {
-		"niceName": "Let-me-Fish",
-		"guiName": "Let me Fish"
-	},
-	"servers": ["https://raw.githubusercontent.com/Lambda11/let-me-fish/master/"],
-	"supportUrl": "https://github.com/Lambda11/let-me-fish/issues"
+    "disableAutoUpdate": false,
+    "name": "let-me-fish",
+    "author": "Lambda11",
+    "description": "Auto-fishes, auto-crafts bait, auto-dismantles fish for you",
+    "options": {
+        "niceName": "Let-me-Fish",
+        "guiName": "Let me Fish"
+    },
+    "servers": ["https://raw.githubusercontent.com/Lambda11/let-me-fish/master/"],
+    "supportUrl": "https://github.com/Lambda11/let-me-fish/issues"
 }
