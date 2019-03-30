@@ -655,7 +655,7 @@ module.exports = function LetMeFish(mod) {
 			{
 				command.message("Inventory full, lets dismantle fish!");
 				clearTimeout(timer);
-				timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START));
+				timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)+1500);
 			}
 			else if(msg.id === 'SMT_CANNOT_FISHING_NON_AREA' && !negoWaiting) // server trolling us?
 			{
