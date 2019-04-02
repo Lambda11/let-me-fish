@@ -321,7 +321,7 @@ module.exports = function LetMeFish(mod) {
 					}
 					timer = setTimeout(dismantle_put_in_one_fish, (rng(ACTION_DELAY_FISH_START)+2000));
 				}
-				else if(awaiting_dismantling)
+				else if(!awaiting_dismantling)
 				{
 					command.message("No fishes-to-dismantle found in your inventory, can't free up space, stopping");
 					console.log("No fishes-to-dismantle found in your inventory, can't free up space, stopping");
