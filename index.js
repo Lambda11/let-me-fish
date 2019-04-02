@@ -168,6 +168,7 @@ module.exports = function LetMeFish(mod) {
 		enabled = false
 		vContractId = null;
 		too_much_fishes = false;
+		triedDismantling = false;
 		putinfishes = 0;
 		unload();
 		clearTimeout(timer);
@@ -257,6 +258,7 @@ module.exports = function LetMeFish(mod) {
 	{
 		if(baitId)
 		{
+			triedDismantling = false;
 			mod.toServer('C_USE_ITEM', 3, {
 				gameId: myGameId,
 				id: baitId,
@@ -319,7 +321,7 @@ module.exports = function LetMeFish(mod) {
 					}
 					timer = setTimeout(dismantle_put_in_one_fish, (rng(ACTION_DELAY_FISH_START)+2000));
 				}
-				else if(!awaiting_dismantling)
+				else if(awaiting_dismantling)
 				{
 					command.message("No fishes-to-dismantle found in your inventory, can't free up space, stopping");
 					console.log("No fishes-to-dismantle found in your inventory, can't free up space, stopping");
@@ -421,9 +423,8 @@ module.exports = function LetMeFish(mod) {
 		if(craftId)
 		{
 			let filets = invenItems.find((item) => item.id === 204052);
-			if(filets && filets.amount >= 30) // need one more to trigger "can't craft more bait"
+			if(filets && filets.amount >= (15 + ((craftId - 204100) * 5)) ) // need one more to trigger "can't craft more bait"
 			{
-				triedDismantling = false;
 				mod.toServer('C_START_PRODUCE', 1, {recipe:craftId, unk: 0});
 			}
 			else if(!triedDismantling)
