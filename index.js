@@ -434,7 +434,7 @@ module.exports = function LetMeFish(mod) {
 				timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_THROW_ROD));
 				command.message("You don't have enough fish parts to craft a bait... dismantling fishes to get some");
 			}
-			else if(invenItems.filter((item) => item.id === baitId).length) // managed to craft few
+			else if(chain || invenItems.filter((item) => item.id === baitId).length) // managed to craft few
 			{
 				command.message("Crafted few bait items, then ran out of fish parts, but lets fish again anyway with what we have now!");
 				timer = setTimeout(use_bait_item, rng(ACTION_DELAY_FISH_START));
