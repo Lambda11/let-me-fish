@@ -418,12 +418,13 @@ module.exports = function LetMeFish(mod) {
 		}
 	}
 	
-	function craft_bait_start()
+	function craft_bait_start(chain)
 	{
 		if(craftId)
 		{
 			let filets = invenItems.find((item) => item.id === 204052);
-			if(filets && filets.amount >= (15 + ((craftId - 204100) * 5)) ) // need one more to trigger "can't craft more bait"
+			let needed = (chain ? 2 : 1) * (15 + ((craftId - 204100) * 5)); // inven gets updated AFTER you send another C_START_PRODUCE
+			if(filets && filets.amount >= needed ) // need one more to trigger "can't craft more bait"
 			{
 				mod.toServer('C_START_PRODUCE', 1, {recipe:craftId, unk: 0});
 			}
@@ -596,7 +597,7 @@ module.exports = function LetMeFish(mod) {
 			
 			if(event.success)
 			{
-				craft_bait_start(); // no need to wait, client doesn't (when you click "craft all")
+				craft_bait_start(true); // no need to wait, client doesn't (when you click "craft all")
 			}
 		});
 		
