@@ -548,6 +548,15 @@ module.exports = function LetMeFish(mod) {
 			}
 		});
 		
+		Hook('S_LOAD_TOPO', 3, event => {
+			if(enabled)
+			{
+				Stop();
+				command.message("You was teleported while fishing, stopping");
+				console.log("You was teleported while fishing, stopping");
+			}
+		});
+		
 		Hook('S_INVEN', mod.majorPatchVersion >= 80 ? 18 : 17, event => {
 			if(!enabled) return;
 			
