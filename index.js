@@ -217,6 +217,10 @@ module.exports = function LetMeFish(mod) {
 			command.message("Why are we not fishing?... Maybe no bait used?");
 			use_bait_item();
 		}
+		else
+		{
+			negoWaiting = false;
+		}
 	}
 	
 	function throw_the_rod()
@@ -241,7 +245,6 @@ module.exports = function LetMeFish(mod) {
 		}
 		else if(rodId)
 		{
-			negoWaiting = false;
 			mod.toServer('C_USE_ITEM', 3, {
 				gameId: myGameId,
 				id: rodId,
@@ -257,7 +260,7 @@ module.exports = function LetMeFish(mod) {
 				unk4: true
 			});
 			fishing = false;
-			timer = setTimeout(check_if_fishing, rng(ACTION_DELAY_FISH_START)+1200); // two types of bait support
+			timer = setTimeout(check_if_fishing, rng(ACTION_DELAY_FISH_START)+2200); // two types of bait support
 		}
 		else
 		{
@@ -725,9 +728,8 @@ module.exports = function LetMeFish(mod) {
 				clearTimeout(timer);
 				timer = setTimeout(throw_the_rod, (rng(ACTION_DELAY_THROW_ROD)+1000));
 			}
-			else if(msg.id === 'SMT_CANNOT_USE_ITEM_WHILE_CONTRACT') // we want to throw the rod but still trading?
+			else if(negoWaiting && msg.id === 'SMT_CANNOT_USE_ITEM_WHILE_CONTRACT') // we want to throw the rod but still trading?
 			{
-				negoWaiting = true;
 				command.message('Negotiations are taking long time to finish... lets wait a bit more')
 				//console.log("nego long wait");
 				clearTimeout(timer);
