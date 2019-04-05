@@ -215,7 +215,7 @@ module.exports = function LetMeFish(mod) {
 		if(!fishing)
 		{
 			command.message("Why are we not fishing?... Maybe no bait used?");
-			use_bait_item()
+			use_bait_item();
 		}
 	}
 	
