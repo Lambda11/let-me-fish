@@ -690,7 +690,7 @@ module.exports = function LetMeFish(mod) {
 				command.message("Fishing cancelled... lets try again?");
 				console.log("Fishing cancelled... due to lag? Retrying...");
 				clearTimeout(timer);
-				timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_FISH_START));
+				timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_FISH_START)+900);
 			}
 			else if(msg.id === 'SMT_YOU_ARE_BUSY') // anti-anit-bot
 			{
