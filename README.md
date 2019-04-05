@@ -3,9 +3,14 @@
 # Let-me-Fish
 TERA-proxy module that mass-auto-fishes fishes, auto-crafts bait when out of bait, and auto-dismantles fish when inventory gets full.
 
-Emulates human-like behavior mostly, abides human-like delays for actions based on fishing diffculty, retries if something goes wrong, works well even if the game is very limited in CPU resources.
+Emulates human-like behavior mostly, abides human-like delays for actions based on fishing diffculty, retries if something goes wrong, works well even if the game is very limited in CPU resources and minimized.
 
 Supports `auto-nego`tiate (with this fork https://github.com/Owyn/auto-nego ), so you would be able to both auto-fish and auto-negotiate
+
+When you are teleported to another location - stops doing everything.
+
+You can use another type of bait (premium for example) and when you run out of it - it'd craft & use standart type of bait set by your configuration
+
 
 ## Usage
 Use command `fish` then follow instruction as simple as just throwing your fish-rod and it will auto-continue everything for you

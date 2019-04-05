@@ -1,7 +1,7 @@
 {
 	"files": {
-		"README.md": "ca92f073c1872abeace12699ffc96293d73cd778c42a2b3667f8bc74f76179a8",
-		"index.js": "c59755e300e96470f43d19fcb8775df128a0a803b91340b89fbb151c6cae9efa",
+		"README.md": "313fa0fa8713a582ad9079a16fbc53dde92963ab600bf659850461ef55d1918f",
+		"index.js": "f8015b6276c9b94849b3a874eed3cb94401f8993fd358841d94d562243bd8dbd",
 		"module.json": "7707b849da8cd8b1ef750c36e0ab699ae98590f8a7426cd08c9a504c9396b074"
 	},
 	"defs": {
@@ -15,6 +15,7 @@
 		"C_START_FISHING_MINIGAME": 1,
 		"C_START_PRODUCE": 1,
 		"C_USE_ITEM": 3,
+		"S_ABNORMALITY_BEGIN": 3,
 		"S_CANCEL_CONTRACT": 1,
 		"S_END_PRODUCE": 1,
 		"S_FISHING_BITE": 1,
