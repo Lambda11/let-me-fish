@@ -20,7 +20,7 @@ module.exports = function LetMeFish(mod) {
 		scanning = false,
 		too_much_fishes = false,
 		triedDismantling = false,
-		tried_rethrowing = false,
+		special_shit = false,
 		myGameId = 0n,
 		statFished = 0,
 		statFishedTiers = {},
@@ -254,7 +254,7 @@ module.exports = function LetMeFish(mod) {
 				unk3: 0,
 				unk4: true
 			});
-			timer = setTimeout(check_if_fishing, rng(ACTION_DELAY_FISH_START)+60000); // two types of bait support
+			special_shit = setTimeout(check_if_fishing, rng(ACTION_DELAY_FISH_START)+60000); // two types of bait support
 		}
 		else
 		{
@@ -532,7 +532,7 @@ module.exports = function LetMeFish(mod) {
 			//let eventgameId = BigInt(data.readUInt32LE(8)) | BigInt(data.readUInt32LE(12)) << 32n;
 			if(myGameId === event.gameId)
 			{
-				clearTimeout(timer); // clear check f
+				clearTimeout(special_shit); // clear check f
 				timer = setTimeout(reel_the_fish, rng(ACTION_DELAY_FISH_START));
 				leftArea = 0;
 				if(scanning)
@@ -699,6 +699,7 @@ module.exports = function LetMeFish(mod) {
 				command.message("Fishing cancelled... lets try again?");
 				console.log("Fishing cancelled... due to lag? Retrying...");
 				clearTimeout(timer);
+				clearTimeout(special_shit);
 				timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_FISH_START)+900);
 			}
 			else if(msg.id === 'SMT_YOU_ARE_BUSY') // anti-anit-bot
