@@ -18,9 +18,9 @@ module.exports = function LetMeFish(mod) {
 	
 	let enabled = false,
 		scanning = false,
-		fishing = false,
 		too_much_fishes = false,
 		triedDismantling = false,
+		tried_rethrowing = false,
 		myGameId = 0n,
 		statFished = 0,
 		statFishedTiers = {},
@@ -212,15 +212,9 @@ module.exports = function LetMeFish(mod) {
 	
 	function check_if_fishing()
 	{
-		if(!fishing)
-		{
-			command.message("Why are we not fishing?... Maybe no bait used?");
-			use_bait_item();
-		}
-		else
-		{
-			negoWaiting = false;
-		}
+		command.message("Why are we not fishing?... Maybe no bait used?");
+		console.log("Why are we not fishing?... Maybe no bait used?");
+		timer = setTimeout(use_bait_item, 500);
 	}
 	
 	function throw_the_rod()
@@ -245,6 +239,7 @@ module.exports = function LetMeFish(mod) {
 		}
 		else if(rodId)
 		{
+			negoWaiting = false;
 			mod.toServer('C_USE_ITEM', 3, {
 				gameId: myGameId,
 				id: rodId,
@@ -259,8 +254,7 @@ module.exports = function LetMeFish(mod) {
 				unk3: 0,
 				unk4: true
 			});
-			fishing = false;
-			timer = setTimeout(check_if_fishing, rng(ACTION_DELAY_FISH_START)+2200); // two types of bait support
+			timer = setTimeout(check_if_fishing, rng(ACTION_DELAY_FISH_START)+60000); // two types of bait support
 		}
 		else
 		{
@@ -288,7 +282,7 @@ module.exports = function LetMeFish(mod) {
 				unk3: 0,
 				unk4: true
 			});
-			timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
+			timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_FISH_START));
 		}
 		else
 		{
@@ -301,7 +295,6 @@ module.exports = function LetMeFish(mod) {
 	{
 		if(enabled)
 		{
-			clearTimeout(timer);
 			if(dismantleFish || dismantleFishGold)
 			{
 				thefishes.length = 0;
@@ -539,6 +532,7 @@ module.exports = function LetMeFish(mod) {
 			//let eventgameId = BigInt(data.readUInt32LE(8)) | BigInt(data.readUInt32LE(12)) << 32n;
 			if(myGameId === event.gameId)
 			{
+				clearTimeout(timer); // clear check f
 				timer = setTimeout(reel_the_fish, rng(ACTION_DELAY_FISH_START));
 				leftArea = 0;
 				if(scanning)
@@ -560,13 +554,6 @@ module.exports = function LetMeFish(mod) {
 				}
 				//command.message("Fish got your bait ");
 				return false; // lets hide and enjoy peace of mind with no temptation to smash "F" button
-			}
-		});
-		
-		Hook('S_ABNORMALITY_BEGIN', 3, event => {
-			if(enabled && !fishing && event.target === myGameId && event.id >= 70330 && event.id <= 70358)
-			{
-				fishing = true;
 			}
 		});
 		
@@ -728,8 +715,9 @@ module.exports = function LetMeFish(mod) {
 				clearTimeout(timer);
 				timer = setTimeout(throw_the_rod, (rng(ACTION_DELAY_THROW_ROD)+1000));
 			}
-			else if(negoWaiting && msg.id === 'SMT_CANNOT_USE_ITEM_WHILE_CONTRACT') // we want to throw the rod but still trading?
+			else if(msg.id === 'SMT_CANNOT_USE_ITEM_WHILE_CONTRACT') // we want to throw the rod but still trading?
 			{
+				negoWaiting = true;
 				command.message('Negotiations are taking long time to finish... lets wait a bit more')
 				//console.log("nego long wait");
 				clearTimeout(timer);
