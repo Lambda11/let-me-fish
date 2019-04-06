@@ -20,7 +20,6 @@ module.exports = function LetMeFish(mod) {
 		scanning = false,
 		too_much_fishes = false,
 		triedDismantling = false,
-		special_shit = false,
 		myGameId = 0n,
 		statFished = 0,
 		statFishedTiers = {},
@@ -29,7 +28,6 @@ module.exports = function LetMeFish(mod) {
 		dismantleFishGold = false,
 		thefishes = [],
 		curTier = 0,
-		timer = null,
 		rodId = 0,
 		baitId = 0,
 		craftId = 0,
@@ -172,7 +170,7 @@ module.exports = function LetMeFish(mod) {
 		triedDismantling = false;
 		putinfishes = 0;
 		unload();
-		clearTimeout(timer);
+		mod.clearAllTimeouts();
 		if(!scanning)
 		{
 			let d = new Date();
@@ -207,14 +205,14 @@ module.exports = function LetMeFish(mod) {
 	{
 		statFished++;
 		mod.toServer("C_END_FISHING_MINIGAME", 1, {success:true});
-		timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
+		mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
 	}
 	
 	function check_if_fishing()
 	{
 		command.message("Why are we not fishing?... Maybe no bait used?");
 		console.log("Why are we not fishing?... Maybe no bait used?");
-		timer = setTimeout(use_bait_item, 500);
+		mod.setTimeout(use_bait_item, 500);
 	}
 	
 	function throw_the_rod()
@@ -230,12 +228,12 @@ module.exports = function LetMeFish(mod) {
 				pendingDeals.splice(i--, 1);
 			}
 			negoWaiting = true;
-			timer = setTimeout(throw_the_rod, (rng(ACTION_DELAY_THROW_ROD)*6));
+			mod.setTimeout(throw_the_rod, (rng(ACTION_DELAY_THROW_ROD)*6));
 		}
 		else if(baitId && !invenItems.filter((item) => item.id === baitId).length)
 		{
 			command.message("No bait found in inventory, lets craft some!");
-			timer = setTimeout(craft_bait_start, rng(ACTION_DELAY_FISH_START)/4);
+			mod.setTimeout(craft_bait_start, rng(ACTION_DELAY_FISH_START)/4);
 		}
 		else if(rodId)
 		{
@@ -254,8 +252,8 @@ module.exports = function LetMeFish(mod) {
 				unk3: 0,
 				unk4: true
 			});
-			clearTimeout(special_shit);
-			special_shit = setTimeout(check_if_fishing, rng(ACTION_DELAY_FISH_START)+60000); // two types of bait support
+			mod.clearAllTimeouts();
+			mod.setTimeout(check_if_fishing, rng(ACTION_DELAY_FISH_START)+90000); // two types of bait support
 		}
 		else
 		{
@@ -283,7 +281,7 @@ module.exports = function LetMeFish(mod) {
 				unk3: 0,
 				unk4: true
 			});
-			timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_FISH_START));
+			mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_FISH_START));
 		}
 		else
 		{
@@ -328,7 +326,7 @@ module.exports = function LetMeFish(mod) {
 					{
 						mod.toServer('C_REQUEST_CONTRACT', 1, {type: 89});
 					}
-					timer = setTimeout(dismantle_put_in_one_fish, (rng(ACTION_DELAY_FISH_START)+2000));
+					mod.setTimeout(dismantle_put_in_one_fish, (rng(ACTION_DELAY_FISH_START)+2000));
 				}
 				else if(awaiting_dismantling <= 0)
 				{
@@ -346,8 +344,7 @@ module.exports = function LetMeFish(mod) {
 					console.log("fish array (reported empty): ");
 					console.log(thefishes);
 					awaiting_dismantling = 0;
-					setTimeout(dismantle_start2, rng(ACTION_DELAY_FISH_START));
-					timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
+					mod.setTimeout(dismantle_start2, rng(ACTION_DELAY_FISH_START)); // cancel contract & throw the ro
 				}
 			}
 			else
@@ -376,24 +373,24 @@ module.exports = function LetMeFish(mod) {
 
 			if(thefishes.length)
 			{
-				timer = setTimeout(dismantle_put_in_one_fish, (rng(ACTION_DELAY_FISH_START)/4));
+				mod.setTimeout(dismantle_put_in_one_fish, (rng(ACTION_DELAY_FISH_START)/4));
 			}
 			else
 			{
-				timer = setTimeout(dismantle_start0, (rng(ACTION_DELAY_FISH_START)/2));
+				mod.setTimeout(dismantle_start0, (rng(ACTION_DELAY_FISH_START)/2));
 			}
 		}
 		else
 		{
 			command.message("Hmmm... we didn't get a contract for dismantlying for some reason (lag?)... lets try again");
-			timer = setTimeout(cleanup_by_dismantle, (rng(ACTION_DELAY_FISH_START)+1500));
+			mod.setTimeout(cleanup_by_dismantle, (rng(ACTION_DELAY_FISH_START)+1500));
 		}
 	}
 	
 	function dismantle_start0()
 	{
 		mod.toServer('C_RQ_START_SOCIAL_ON_PROGRESS_DECOMPOSITION', 1, { contract: vContractId });
-		timer = setTimeout(dismantle_start, 1925);
+		mod.setTimeout(dismantle_start, 1925);
 	}
 	
 	function dismantle_start()
@@ -403,11 +400,11 @@ module.exports = function LetMeFish(mod) {
 		mod.toServer('C_RQ_COMMIT_DECOMPOSITION_CONTRACT', 1, {contract: vContractId});
 		if(too_much_fishes)
 		{
-			//timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)+1500);
+			//mod.setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)+1500);
 		}
 		else
 		{
-			setTimeout(dismantle_start2, rng(ACTION_DELAY_FISH_START)); // lets not let user cancel that
+			mod.setTimeout(dismantle_start2, rng(ACTION_DELAY_FISH_START));
 		}
 	}
 	
@@ -423,7 +420,7 @@ module.exports = function LetMeFish(mod) {
 		}
 		if(enabled)
 		{
-			timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD)); // lets resume fishing
+			mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD)); // lets resume fishing
 		}
 	}
 	
@@ -440,13 +437,13 @@ module.exports = function LetMeFish(mod) {
 			else if(!triedDismantling)
 			{
 				triedDismantling = true;
-				timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_THROW_ROD));
+				mod.setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_THROW_ROD));
 				command.message("You don't have enough fish parts to craft a bait... dismantling fishes to get some");
 			}
 			else if(chain || invenItems.filter((item) => item.id === baitId).length) // managed to craft few
 			{
 				command.message("Crafted few bait items, then ran out of fish parts, but lets fish again anyway with what we have now!");
-				timer = setTimeout(use_bait_item, rng(ACTION_DELAY_FISH_START));
+				mod.setTimeout(use_bait_item, rng(ACTION_DELAY_FISH_START));
 			}
 			else
 			{
@@ -522,7 +519,7 @@ module.exports = function LetMeFish(mod) {
 				//console.log("size of statFishedTiers now: " + (Object.keys(statFishedTiers).length));
 				//console.log(statFishedTiers);
 				command.message("Started fishing minigame, Tier: " + fishTier);
-				timer = setTimeout(catch_the_fish, (rng(ACTION_DELAY_FISH_CATCH)+(curTier*1000)));
+				mod.setTimeout(catch_the_fish, (rng(ACTION_DELAY_FISH_CATCH)+(curTier*1000)));
 				return false; // lets hide that minigame
 			}
 		});
@@ -533,8 +530,8 @@ module.exports = function LetMeFish(mod) {
 			//let eventgameId = BigInt(data.readUInt32LE(8)) | BigInt(data.readUInt32LE(12)) << 32n;
 			if(myGameId === event.gameId)
 			{
-				clearTimeout(special_shit); // clear check f
-				timer = setTimeout(reel_the_fish, rng(ACTION_DELAY_FISH_START));
+				mod.clearAllTimeouts(); // clear check f
+				mod.setTimeout(reel_the_fish, rng(ACTION_DELAY_FISH_START));
 				leftArea = 0;
 				if(scanning)
 				{
@@ -574,8 +571,9 @@ module.exports = function LetMeFish(mod) {
 			
 			if(too_much_fishes && putinfishes === 0 && !event.more)
 			{
-				setTimeout(function() { command.message("Inventory fully updated, starting dismantling of the next batch of fish"); }, ACTION_DELAY_FISH_START[0]/3);
-				timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)/3);
+				mod.clearAllTimeouts();
+				mod.setTimeout(function() { command.message("Inventory fully updated, starting dismantling of the next batch of fish"); }, ACTION_DELAY_FISH_START[0]/3);
+				mod.setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)/3);
 			}
 		});
 		
@@ -591,8 +589,8 @@ module.exports = function LetMeFish(mod) {
 			
 			vContractId = null;
 			command.message("Contract for dismantling cancelled (not by let-me-fish), retrying fishing sequence...");
-			clearTimeout(timer);
-			timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
+			mod.clearAllTimeouts();
+			mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
 		});
 
 		Hook('C_START_PRODUCE', 1, event =>{
@@ -643,22 +641,22 @@ module.exports = function LetMeFish(mod) {
 			if(msg.id === 'SMT_CANNOT_FISHING_NON_BAIT') // out of bait
 			{
 				command.message("Out of bait, lets craft some!");
-				clearTimeout(timer);
-				timer = setTimeout(craft_bait_start, rng(ACTION_DELAY_FISH_START));
+				mod.clearAllTimeouts();
+				mod.setTimeout(craft_bait_start, rng(ACTION_DELAY_FISH_START));
 			}
 			else if(msg.id === 'SMT_ITEM_CANT_POSSESS_MORE') // craft limit
 			{
 				if(!vContractId)
 				{
 					command.message("Crafted to the fullest, lets fish again!");
-					clearTimeout(timer);
-					timer = setTimeout(use_bait_item, rng(ACTION_DELAY_FISH_START));
+					mod.clearAllTimeouts();
+					mod.setTimeout(use_bait_item, rng(ACTION_DELAY_FISH_START));
 				}
 				else // 10k filet // 3 error sysmsgs at once for that lol
 				{
 					command.message("You have reached the 10k dismantled fish parts limit, stopping");
 					console.log("You have reached the 10k dismantled fish parts limit, stopping");
-					clearTimeout(timer);
+					mod.clearAllTimeouts();
 					if(putinfishes)
 					{
 						too_much_fishes = false;
@@ -675,20 +673,18 @@ module.exports = function LetMeFish(mod) {
 			else if(msg.id === 'SMT_CANNOT_FISHING_FULL_INVEN') // full inven
 			{
 				command.message("Inventory full, lets dismantle fish!");
-				clearTimeout(timer);
-				clearTimeout(special_shit);
-				timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)+1500);
+				mod.clearAllTimeouts();
+				mod.setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)+1500);
 			}
 			else if(msg.id === 'SMT_CANNOT_FISHING_NON_AREA' && !negoWaiting) // server trolling us?
 			{
 				command.message("Fishing area changed (you left it?), well that happens... lets try again?");
 				console.log("Fishing area changed (you left it?), well that happens... Retrying...");
-				clearTimeout(timer);
-				clearTimeout(special_shit);
+				mod.clearAllTimeouts();
 				leftArea++;
 				if(leftArea < 7)
 				{
-					timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
+					mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
 				}
 				else
 				{
@@ -701,31 +697,30 @@ module.exports = function LetMeFish(mod) {
 			{
 				command.message("Fishing cancelled... lets try again?");
 				console.log("Fishing cancelled... due to lag? Retrying...");
-				clearTimeout(timer);
-				clearTimeout(special_shit);
-				timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_FISH_START)+900);
+				mod.clearAllTimeouts();
+				mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_FISH_START)+900);
 			}
 			else if(msg.id === 'SMT_YOU_ARE_BUSY') // anti-anit-bot
 			{
 				command.message("Evil people trying to disturb your fishing... lets try again?");
 				console.log("Evil people trying to disturb your fishing... Retrying...");
-				clearTimeout(timer);
-				timer = setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
+				mod.clearAllTimeouts();
+				mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
 			}
 			else if(negoWaiting && !pendingDeals.length && msg.id === 'SMT_MEDIATE_SUCCESS_SELL') // all out of deals and still waiting?
 			{
 				command.message('All negotiations finished... resuming fishing shortly')
 				//console.log("nego end wait OK");
-				clearTimeout(timer);
-				timer = setTimeout(throw_the_rod, (rng(ACTION_DELAY_THROW_ROD)+1000));
+				mod.clearAllTimeouts();
+				mod.setTimeout(throw_the_rod, (rng(ACTION_DELAY_THROW_ROD)+1000));
 			}
 			else if(msg.id === 'SMT_CANNOT_USE_ITEM_WHILE_CONTRACT') // we want to throw the rod but still trading?
 			{
 				negoWaiting = true;
 				command.message('Negotiations are taking long time to finish... lets wait a bit more')
 				//console.log("nego long wait");
-				clearTimeout(timer);
-				timer = setTimeout(throw_the_rod, (rng(ACTION_DELAY_THROW_ROD)+3000));
+				mod.clearAllTimeouts();
+				mod.setTimeout(throw_the_rod, (rng(ACTION_DELAY_THROW_ROD)+3000));
 			}
         });
 	}
