@@ -254,6 +254,7 @@ module.exports = function LetMeFish(mod) {
 				unk3: 0,
 				unk4: true
 			});
+			clearTimeout(special_shit);
 			special_shit = setTimeout(check_if_fishing, rng(ACTION_DELAY_FISH_START)+60000); // two types of bait support
 		}
 		else
@@ -675,6 +676,7 @@ module.exports = function LetMeFish(mod) {
 			{
 				command.message("Inventory full, lets dismantle fish!");
 				clearTimeout(timer);
+				clearTimeout(special_shit);
 				timer = setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)+1500);
 			}
 			else if(msg.id === 'SMT_CANNOT_FISHING_NON_AREA' && !negoWaiting) // server trolling us?
@@ -682,6 +684,7 @@ module.exports = function LetMeFish(mod) {
 				command.message("Fishing area changed (you left it?), well that happens... lets try again?");
 				console.log("Fishing area changed (you left it?), well that happens... Retrying...");
 				clearTimeout(timer);
+				clearTimeout(special_shit);
 				leftArea++;
 				if(leftArea < 7)
 				{
