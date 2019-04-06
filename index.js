@@ -253,7 +253,7 @@ module.exports = function LetMeFish(mod) {
 				unk4: true
 			});
 			mod.clearAllTimeouts();
-			mod.setTimeout(check_if_fishing, rng(ACTION_DELAY_FISH_START)+90000); // two types of bait support
+			mod.setTimeout(check_if_fishing, rng(ACTION_DELAY_FISH_START)+180000); // 180 sec cuz after dismantling it might take 2+ minutes for a fish to bite
 		}
 		else
 		{
@@ -420,7 +420,7 @@ module.exports = function LetMeFish(mod) {
 		}
 		if(enabled)
 		{
-			mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD)); // lets resume fishing
+			mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD)+1000); // lets resume fishing
 		}
 	}
 	
