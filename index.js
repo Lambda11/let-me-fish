@@ -205,7 +205,7 @@ module.exports = function LetMeFish(mod) {
 	{
 		statFished++;
 		mod.toServer("C_END_FISHING_MINIGAME", 1, {success:true});
-		mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
+		mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD)+500);
 	}
 	
 	function check_if_fishing()
@@ -696,9 +696,9 @@ module.exports = function LetMeFish(mod) {
 			else if(msg.id === 'SMT_FISHING_RESULT_CANCLE') // hmmm?
 			{
 				command.message("Fishing cancelled... lets try again?");
-				console.log("Fishing cancelled... due to lag? Retrying...");
+				//console.log("Fishing cancelled... due to lag? Retrying...");
 				mod.clearAllTimeouts();
-				mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_FISH_START)+900);
+				mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_FISH_START));
 			}
 			else if(msg.id === 'SMT_YOU_ARE_BUSY') // anti-anit-bot
 			{
