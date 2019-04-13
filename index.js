@@ -7,15 +7,17 @@ const   path = require('path'),
 		fs = require('fs');
 				
 const BAIT_RECIPES = [
-	{name: "Bait II",	itemId: 206001, recipeId: 204100},
-	{name: "Bait III",	itemId: 206002, recipeId: 204101},
-	{name: "Bait IV",	itemId: 206003, recipeId: 204102},
-	{name: "Bait V",	itemId: 206004, recipeId: 204103}
+	{name: "Bait II",	itemId: 206001, recipeId: 204100, wormId: 206006},
+	{name: "Bait III",	itemId: 206002, recipeId: 204101, wormId: 206007},
+	{name: "Bait IV",	itemId: 206003, recipeId: 204102, wormId: 206008},
+	{name: "Bait V",	itemId: 206004, recipeId: 204103, wormId: 206009}
 ];
 		
 module.exports = function LetMeFish(mod) {
-	const command = mod.command;
-	
+	const command = mod.command,
+		  hasNego = mod.manager.isLoaded('auto-nego'),
+		  notifier = mod.manager.isLoaded('notifier') ? ( mod.require ? mod.require.notifier : require('tera-notifier')(mod) ) : false;
+		  
 	let enabled = false,
 		scanning = false,
 		too_much_fishes = false,
@@ -40,9 +42,23 @@ module.exports = function LetMeFish(mod) {
 		statStarted = null,
 		gSettings = {},
 		settingsFileName,
-		hasNego = mod.manager.isLoaded('auto-nego'),
 		pendingDeals = [],
 		negoWaiting = false;
+		
+	function notificationAFK(msg, timeout)
+	{
+		command.message(msg);
+		console.log(msg);
+		if(notifier !== false)
+		{
+			notifier.notifyafk({
+				title: 'Fishing',
+				message: msg,
+				wait: false, 
+				sound: 'Notification.IM', 
+			},timeout);
+		}
+	}
 	
 	function saveSettings(obj)
 	{
@@ -257,7 +273,7 @@ module.exports = function LetMeFish(mod) {
 		}
 		else
 		{
-			command.message("You didn't use your rod item when you was told to, did you? Now let-me-fish can't rethrow it for you...");
+			notificationAFK("You didn't use your rod item when you was told to, did you? Now let-me-fish can't rethrow it for you...");
 			Stop();
 		}
 	}
@@ -285,7 +301,7 @@ module.exports = function LetMeFish(mod) {
 		}
 		else
 		{
-			command.message("How can you fish without a bait?... hmmm...");
+			notificationAFK("How can you fish without a bait?... hmmm...");
 			Stop();
 		}
 	}
@@ -330,8 +346,7 @@ module.exports = function LetMeFish(mod) {
 				}
 				else if(awaiting_dismantling <= 0)
 				{
-					command.message("No fishes-to-dismantle found in your inventory, can't free up space, stopping");
-					console.log("No fishes-to-dismantle found in your inventory, can't free up space, stopping");
+					notificationAFK("No fishes-to-dismantle found in your inventory, can't free up space, stopping");
 					Stop();
 				}
 				else // what the fuck is this shit
@@ -349,7 +364,7 @@ module.exports = function LetMeFish(mod) {
 			}
 			else
 			{
-				command.message("You disabled auto-dismantle, didn't you? Now let-me-fish can't free up inventory space for you... Stopping");
+				notificationAFK("You disabled auto-dismantle, didn't you? Now let-me-fish can't free up inventory space for you... Stopping");
 				Stop();
 			}
 		}
@@ -433,6 +448,7 @@ module.exports = function LetMeFish(mod) {
 			if(filets && filets.amount >= needed ) // need one more to trigger "can't craft more bait"
 			{
 				mod.toServer('C_START_PRODUCE', 1, {recipe:craftId, unk: 0});
+				baitId = BAIT_RECIPES.find(obj => obj.recipeId === craftId).itemId;
 			}
 			else if(!triedDismantling)
 			{
@@ -447,14 +463,13 @@ module.exports = function LetMeFish(mod) {
 			}
 			else
 			{
-				command.message("You don't have enough fish parts to craft a bait and no fish to dismantle for fish parts... stopping");
-				console.log("You don't have enough fish parts to craft a bait  and no fish to dismantle for fish parts... stopping");
+				notificationAFK("You don't have enough fish parts to craft a bait and no fish to dismantle for fish parts... stopping");
 				Stop();
 			}
 		}
 		else
 		{
-			command.message("You didn't provide a sample craft recipe, did you? Now let-me-fish can't craft more bait for you...");
+			notificationAFK("You didn't provide a sample craft recipe, did you? Now let-me-fish can't craft more bait for you...");
 			Stop();
 		}
 	}
@@ -490,13 +505,12 @@ module.exports = function LetMeFish(mod) {
 			}
 			else
 			{
-				command.message("Your config file is corrupted, bait recipe id is wrong");
-				console.log("Your config file is corrupted, bait recipe id is wrong");
+				notificationAFK("Your config file is corrupted, bait recipe id is wrong");
 			}
-			/*console.log("LOADED SETTINGS: ");
-			console.log(dismantleFish);
-			console.log(craftId);
-			console.log(baitId);*/
+			/*notificationAFK("LOADED SETTINGS: ");
+			notificationAFK(dismantleFish);
+			notificationAFK(craftId);
+			notificationAFK(baitId);*/
 		}
 	});
 		
@@ -516,9 +530,7 @@ module.exports = function LetMeFish(mod) {
 					curTier = fishTier;
 				}
 				statFishedTiers[fishTier] = statFishedTiers[fishTier] ? statFishedTiers[fishTier]+1 : 1;
-				//console.log("size of statFishedTiers now: " + (Object.keys(statFishedTiers).length));
-				//console.log(statFishedTiers);
-				command.message("Started fishing minigame, Tier: " + fishTier);
+				command.message("Started fishing minigame, Tier " + fishTier);
 				mod.setTimeout(catch_the_fish, (rng(ACTION_DELAY_FISH_CATCH)+(curTier*1000)));
 				return false; // lets hide that minigame
 			}
@@ -559,8 +571,7 @@ module.exports = function LetMeFish(mod) {
 			if(enabled)
 			{
 				Stop();
-				command.message("You was teleported while fishing, stopping");
-				console.log("You was teleported while fishing, stopping");
+				notificationAFK("You was teleported while fishing, stopping");
 			}
 		});
 		
@@ -627,7 +638,6 @@ module.exports = function LetMeFish(mod) {
 					if(deal.playerId == event.playerId && deal.listing == event.listing) pendingDeals.splice(i--, 1);
 				}
 				pendingDeals.push(event);
-				//console.log("nego deal suggested");
 				command.message("Nego deal was suggested, gonna address it after current fish...")
 				return false;
 			}
@@ -648,14 +658,22 @@ module.exports = function LetMeFish(mod) {
 			{
 				if(!vContractId)
 				{
-					command.message("Crafted to the fullest, lets fish again!");
 					mod.clearAllTimeouts();
+					let itemId = Number(msg.tokens.ItemName.substr(6));
+					if(itemId >= 206006 && itemId <= 206009)
+					{
+						command.message("Crafted worms to the fullest, lets fish using those now!");
+						baitId = itemId;
+					}
+					else
+					{
+						command.message("Crafted to the fullest, lets fish again!");
+					}
 					mod.setTimeout(use_bait_item, rng(ACTION_DELAY_FISH_START));
 				}
 				else // 10k filet // 3 error sysmsgs at once for that lol
 				{
-					command.message("You have reached the 10k dismantled fish parts limit, stopping");
-					console.log("You have reached the 10k dismantled fish parts limit, stopping");
+					notificationAFK("You have reached the 10k dismantled fish parts limit, stopping");
 					mod.clearAllTimeouts();
 					if(putinfishes)
 					{
@@ -689,14 +707,13 @@ module.exports = function LetMeFish(mod) {
 				else
 				{
 					Stop();
-					command.message("Fishing area changed for good it seems, can't fish anymore, - choose better place next time, stopping");
-					console.log("Fishing area changed for good it seems, can't fish anymore, - choose better place next time, stopping");
+					notificationAFK("Fishing area changed for good it seems, can't fish anymore, - choose better place next time, stopping");
 				}
 			}
 			else if(msg.id === 'SMT_FISHING_RESULT_CANCLE') // hmmm?
 			{
 				command.message("Fishing cancelled... lets try again?");
-				//console.log("Fishing cancelled... due to lag? Retrying...");
+				//notificationAFK("Fishing cancelled... due to lag? Retrying...");
 				mod.clearAllTimeouts();
 				mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_FISH_START));
 			}
@@ -705,20 +722,18 @@ module.exports = function LetMeFish(mod) {
 				command.message("Evil people trying to disturb your fishing... lets try again?");
 				console.log("Evil people trying to disturb your fishing... Retrying...");
 				mod.clearAllTimeouts();
-				mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD));
+				mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD)+3000);
 			}
 			else if(negoWaiting && !pendingDeals.length && msg.id === 'SMT_MEDIATE_SUCCESS_SELL') // all out of deals and still waiting?
 			{
 				command.message('All negotiations finished... resuming fishing shortly')
-				//console.log("nego end wait OK");
 				mod.clearAllTimeouts();
-				mod.setTimeout(throw_the_rod, (rng(ACTION_DELAY_THROW_ROD)+1000));
+				mod.setTimeout(throw_the_rod, (rng(ACTION_DELAY_THROW_ROD)+2000));
 			}
 			else if(msg.id === 'SMT_CANNOT_USE_ITEM_WHILE_CONTRACT') // we want to throw the rod but still trading?
 			{
 				negoWaiting = true;
 				command.message('Negotiations are taking long time to finish... lets wait a bit more')
-				//console.log("nego long wait");
 				mod.clearAllTimeouts();
 				mod.setTimeout(throw_the_rod, (rng(ACTION_DELAY_THROW_ROD)+3000));
 			}

@@ -7,9 +7,11 @@ Emulates human-like behavior mostly, abides human-like delays for actions based 
 
 Supports `auto-nego`tiate (with this fork https://github.com/Owyn/auto-nego ), so you would be able to both auto-fish and auto-negotiate
 
+Supports `Tera-Notifier` ( https://github.com/SerenTera/tera-notifier ), so when fishing stops for some reason you'd get a windows pop-up if you have that module installed too
+
 When you are teleported to another location - stops doing everything.
 
-You can use another type of bait (premium for example) and when you run out of it - it'd craft & use standart type of bait set by your configuration
+You can use another type of bait (premium for example) and when you run out of it - it'd craft & use standart type of bait set by your configuration (just have at least 1 normal bait in your inv so it won't try to craft it cuz you ran out of it)
 
 
 ## Usage
