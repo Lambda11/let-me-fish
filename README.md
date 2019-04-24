@@ -15,7 +15,7 @@ You can use another type of bait (premium for example) and when you run out of i
 
 
 ## Usage
-Use command `fish` then follow instruction as simple as just throwing your fish-rod and it will auto-continue everything for you
+Use command `fish` (or `!fish`) then follow instruction as simple as just throwing your fish-rod and it will auto-continue everything for you
 
 `fish save` - saves your used recipe and types of fishes to auto-dismantle into per-character config file which will be used on next login  
 `fish gold` - toggles auto-dismantling of goldfishes (default OFF)  

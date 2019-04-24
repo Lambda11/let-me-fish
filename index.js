@@ -94,7 +94,7 @@ module.exports = function LetMeFish(mod) {
 		fs.mkdirSync(path.join(__dirname, './saves'));
 	}
 
-	command.add('fish', {
+	command.add(['fish', '!fish'], {
         $none() {
             enabled = !enabled;
 			command.message(`Let me Fish is now: ${enabled ? "enabled" : "disabled"}.`);
@@ -478,7 +478,7 @@ module.exports = function LetMeFish(mod) {
 		playerLoc = event;
 	});
 
-	mod.hook('S_LOGIN', 12, event => {
+	mod.hook('S_LOGIN', mod.majorPatchVersion >= 81 ? 13 : 12, event => {
 		myGameId = event.gameId;
 		invenItems = [];
 		rodId = null;
@@ -728,7 +728,7 @@ module.exports = function LetMeFish(mod) {
 			{
 				command.message('All negotiations finished... resuming fishing shortly')
 				mod.clearAllTimeouts();
-				mod.setTimeout(throw_the_rod, (rng(ACTION_DELAY_THROW_ROD)+2000));
+				mod.setTimeout(throw_the_rod, (rng(ACTION_DELAY_THROW_ROD)+5500));
 			}
 			else if(msg.id === 'SMT_CANNOT_USE_ITEM_WHILE_CONTRACT') // we want to throw the rod but still trading?
 			{

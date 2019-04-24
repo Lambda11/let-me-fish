@@ -1,7 +1,7 @@
 {
 	"files": {
-		"README.md": "4edc0f0217baf1c40fe5165ad3472b0ae9a0544a66b6f90a6d6752b0367af728",
-		"index.js": "28f0526c5b44e218a0130ab8703f709abee2f9be1842c2fedc163de871b8a12f",
+		"README.md": "f52dafeeec703f5c1cfcba91dae4225c5ff66569fb581f05bc7231bf3818955f",
+		"index.js": "0d26f6089f0eb592d9cd05660d11b48bb3dba2d7d2b9039a246c12e0b7b60212",
 		"module.json": "7707b849da8cd8b1ef750c36e0ab699ae98590f8a7426cd08c9a504c9396b074"
 	},
 	"defs": {
@@ -20,7 +20,7 @@
 		"S_FISHING_BITE": 1,
 		"S_INVEN": [17,18],
 		"S_LOAD_TOPO": 3,
-		"S_LOGIN": 12,
+		"S_LOGIN": [12,13],
 		"S_REQUEST_CONTRACT": 1,
 		"S_START_FISHING_MINIGAME": 1,
 		"S_SYSTEM_MESSAGE": 1,
