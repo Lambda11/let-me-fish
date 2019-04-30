@@ -415,7 +415,7 @@ module.exports = function LetMeFish(mod) {
 		mod.toServer('C_RQ_COMMIT_DECOMPOSITION_CONTRACT', 1, {contract: vContractId});
 		if(too_much_fishes)
 		{
-			//mod.setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)+1500);
+			mod.setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)+5500); // timeout backup function
 		}
 		else
 		{
@@ -732,6 +732,7 @@ module.exports = function LetMeFish(mod) {
 			}
 			else if(msg.id === 'SMT_CANNOT_USE_ITEM_WHILE_CONTRACT') // we want to throw the rod but still trading?
 			{
+				console.log(msg);
 				negoWaiting = true;
 				command.message('Negotiations are taking long time to finish... lets wait a bit more')
 				mod.clearAllTimeouts();
