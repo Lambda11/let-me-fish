@@ -732,7 +732,6 @@ module.exports = function LetMeFish(mod) {
 			}
 			else if(msg.id === 'SMT_CANNOT_USE_ITEM_WHILE_CONTRACT') // we want to throw the rod but still trading?
 			{
-				console.log(msg);
 				negoWaiting = true;
 				command.message('Negotiations are taking long time to finish... lets wait a bit more')
 				mod.clearAllTimeouts();
