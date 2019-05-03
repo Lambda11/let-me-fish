@@ -342,7 +342,7 @@ module.exports = function LetMeFish(mod) {
 					{
 						mod.toServer('C_REQUEST_CONTRACT', 1, {type: 89});
 					}
-					mod.setTimeout(dismantle_put_in_one_fish, (rng(ACTION_DELAY_FISH_START)+2000));
+					mod.setTimeout(dismantle_put_in_one_fish, (rng(ACTION_DELAY_FISH_START)+15000)); // timeout
 				}
 				else if(awaiting_dismantling <= 0)
 				{
@@ -593,6 +593,7 @@ module.exports = function LetMeFish(mod) {
 			
 			vContractId = event.id;
 			command.message("Got the contract id for dismantling: " + event.id);
+			mod.setTimeout(dismantle_put_in_one_fish, (rng(ACTION_DELAY_FISH_START)/2));
 		});
 		
 		Hook('S_CANCEL_CONTRACT', 1, event =>{
