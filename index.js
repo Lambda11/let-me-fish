@@ -593,6 +593,7 @@ module.exports = function LetMeFish(mod) {
 			
 			vContractId = event.id;
 			command.message("Got the contract id for dismantling: " + event.id);
+			mod.clearAllTimeouts();
 			mod.setTimeout(dismantle_put_in_one_fish, (rng(ACTION_DELAY_FISH_START)/2));
 		});
 		
