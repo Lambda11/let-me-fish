@@ -719,7 +719,7 @@ module.exports = function LetMeFish(mod) {
 				mod.clearAllTimeouts();
 				mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_FISH_START));
 			}
-			else if(msg.id === 'SMT_YOU_ARE_BUSY') // anti-anit-bot
+			else if(msg.id === 'SMT_YOU_ARE_BUSY' && !vContractId) // anti-anit-bot
 			{
 				command.message("Evil people trying to disturb your fishing... lets try again?");
 				console.log("Evil people trying to disturb your fishing... Retrying...");
