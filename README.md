@@ -29,7 +29,7 @@ Use command `fish` (or `!fish`) then follow instruction as simple as just throwi
 
 ## Installation
 put `defs` insides to `node_modules\tera-data\protocol\` folder  
-put `opcodes` insides to `node_modules\tera-data\map\` (in Caalis proxy that's a folder for opcodes in **addition** to standart ones) (In Pinkies you'd have to merge contents of those files with ones you already have, I think)
+if you are using the **Limited Proxy** (with limited opcodes) aka **TeraToolBox** you also need to update your **tera-data** opcodes from here (Pinky Proxy): https://github.com/tera-proxy/tera-data/tree/master/map - put those protocol files into `node_modules\tera-data\map\` with replace (that's a folder for opcodes in **addition** to standart ones)
 
 `ERROR: Error: [dispatch] hook: unmapped packet ` means you have no opcodes installed correctly for your current game version  
 `unsupported packet ` means you have no defs installed correctly  
