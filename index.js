@@ -575,7 +575,7 @@ module.exports = function LetMeFish(mod) {
 			}
 		});
 		
-		Hook('S_INVEN', mod.majorPatchVersion >= 80 ? 18 : 17, event => {
+		Hook(mod.majorPatchVersion >= 85 ? 'S_ITEMLIST' : 'S_INVEN', mod.majorPatchVersion >= 85 ? 1 : 18, event => {
 			if(!enabled) return;
 			
 			invenItems = event.first ? event.items : invenItems.concat(event.items);
