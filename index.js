@@ -576,7 +576,7 @@ module.exports = function LetMeFish(mod) {
 			}
 		});
 		
-		Hook(mod.majorPatchVersion >= 85 ? 'S_ITEMLIST' : 'S_INVEN', mod.majorPatchVersion >= 85 ? 1 : 18, event => {
+		Hook((mod.majorPatchVersion >= 85 ? 'S_ITEMLIST' : 'S_INVEN'), (mod.majorPatchVersion >= 85 ? 1 : 18), event => {
 			if(!enabled) return;
 			
 			invenItems = event.first ? event.items : invenItems.concat(event.items);
@@ -587,6 +587,7 @@ module.exports = function LetMeFish(mod) {
 				mod.setTimeout(function() { command.message("Inventory fully updated, starting dismantling of the next batch of fish"); }, ACTION_DELAY_FISH_START[0]/3);
 				mod.setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)/3);
 			}
+			if(!event.more) {command.message("You have:" + invenItems.length + " items in inventory");}
 		});
 		
 		Hook('S_REQUEST_CONTRACT', 1, event =>{
