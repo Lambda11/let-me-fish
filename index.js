@@ -576,7 +576,46 @@ module.exports = function LetMeFish(mod) {
 			}
 		});
 		
-		Hook((mod.majorPatchVersion >= 85 ? 'S_ITEMLIST' : 'S_INVEN'), (mod.majorPatchVersion >= 85 ? 1 : 18), event => {
+	if(mod.majorPatchVersion >= 85)
+	{
+		var invenItemsBuffer = [];
+		var invenFirst = true;
+		Hook('S_ITEMLIST', 1, event => {
+			if(!enabled) return;
+			
+			if(event.container !== 14)
+			{
+				invenItemsBuffer = event.first ? event.items : invenItemsBuffer.concat(event.items);
+				if(!event.more)
+				{
+					if(invenFirst)
+					{
+						invenFirst = false;
+						invenItems = invenItemsBuffer;
+					}
+					else
+					{
+						invenItems = invenItems.concat(invenItemsBuffer);
+					}
+				}
+			}
+			
+			if(!event.more) {command.message("You have: " + invenItemsBuffer.length + " items in container #" + event.container + ", pocket #" + event.pocket);}
+			if(event.lastInBatch)
+			{
+				if(!event.more) {invenFirst = true; command.message("You have: " + invenItems.length + " items TOTAL in inventory");}
+				if(too_much_fishes && putinfishes === 0)
+				{
+					mod.clearAllTimeouts();
+					mod.setTimeout(function() { command.message("Inventory fully updated, starting dismantling of the next batch of fish"); }, ACTION_DELAY_FISH_START[0]/3);
+					mod.setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)/3);
+				}
+			}
+		});
+	}
+	else
+	{
+		Hook('S_INVEN', 18, event => {
 			if(!enabled) return;
 			
 			invenItems = event.first ? event.items : invenItems.concat(event.items);
@@ -587,8 +626,8 @@ module.exports = function LetMeFish(mod) {
 				mod.setTimeout(function() { command.message("Inventory fully updated, starting dismantling of the next batch of fish"); }, ACTION_DELAY_FISH_START[0]/3);
 				mod.setTimeout(cleanup_by_dismantle, rng(ACTION_DELAY_FISH_START)/3);
 			}
-			if(!event.more) {command.message("You have:" + invenItems.length + " items in inventory");}
 		});
+	}
 		
 		Hook('S_REQUEST_CONTRACT', 1, event =>{
 			if(!enabled || scanning || event.type != dismantle_contract_type || event.senderId !== myGameId) return;
