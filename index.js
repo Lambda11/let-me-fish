@@ -601,9 +601,10 @@ module.exports = function LetMeFish(mod) {
 			}
 			
 			if(!event.more) {command.message("You have: " + invenItemsBuffer.length + " items in container #" + event.container + ", pocket #" + event.pocket);}
-			if(event.lastInBatch)
+			if(event.lastInBatch && !event.more)
 			{
-				if(!event.more) {invenFirst = true; command.message("You have: " + invenItems.length + " items TOTAL in inventory");}
+				invenFirst = true;
+				command.message("You have: " + invenItems.length + " items TOTAL in inventory");
 				if(too_much_fishes && putinfishes === 0)
 				{
 					mod.clearAllTimeouts();
