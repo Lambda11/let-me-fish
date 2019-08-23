@@ -16,7 +16,8 @@ const BAIT_RECIPES = [
 module.exports = function LetMeFish(mod) {
 	const command = mod.command,
 		  hasNego = mod.manager.isLoaded('auto-nego'),
-		  notifier = mod.manager.isLoaded('notifier') ? ( mod.require ? mod.require.notifier : require('tera-notifier')(mod) ) : false;
+		  notifier = mod.manager.isLoaded('notifier') ? ( mod.require ? mod.require.notifier : require('tera-notifier')(mod) ) : false,
+		  dismantle_contract_type = (mod.majorPatchVersion >= 85 ? 90 : 89);
 		  
 	let enabled = false,
 		scanning = false,
@@ -340,7 +341,7 @@ module.exports = function LetMeFish(mod) {
 					command.message("Gonna dismantle this much fishes now: " + thefishes.length);
 					if(!vContractId)
 					{
-						mod.toServer('C_REQUEST_CONTRACT', 1, {type: 89});
+						mod.toServer('C_REQUEST_CONTRACT', 1, {type: dismantle_contract_type});
 					}
 					mod.setTimeout(dismantle_put_in_one_fish, (rng(ACTION_DELAY_FISH_START)+15000)); // timeout
 				}
@@ -428,7 +429,7 @@ module.exports = function LetMeFish(mod) {
 		if(vContractId)
 		{
 			mod.toServer('C_CANCEL_CONTRACT', 1, {
-				type: 89,
+				type: dismantle_contract_type,
 				id: vContractId
 			});
 			vContractId = null;
@@ -589,7 +590,7 @@ module.exports = function LetMeFish(mod) {
 		});
 		
 		Hook('S_REQUEST_CONTRACT', 1, event =>{
-			if(!enabled || scanning || event.type != 89 || event.senderId !== myGameId) return;
+			if(!enabled || scanning || event.type != dismantle_contract_type || event.senderId !== myGameId) return;
 			
 			vContractId = event.id;
 			command.message("Got the contract id for dismantling: " + event.id);
@@ -598,7 +599,7 @@ module.exports = function LetMeFish(mod) {
 		});
 		
 		Hook('S_CANCEL_CONTRACT', 1, event =>{
-			if(!enabled || scanning || event.type != 89 || event.id != vContractId || event.senderId !== myGameId) return;
+			if(!enabled || scanning || event.type != dismantle_contract_type || event.id != vContractId || event.senderId !== myGameId) return;
 			
 			vContractId = null;
 			command.message("Contract for dismantling cancelled (not by let-me-fish), retrying fishing sequence...");
