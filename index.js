@@ -378,6 +378,7 @@ module.exports = function LetMeFish(mod) {
 			const thefish = thefishes.pop();
 			if(thefish)
 			{
+				command.message("Fish goes into dismantler: id " + thefish.id + ", " + thefish.dbid);
 				putinfishes++;
 				mod.toServer('C_RQ_ADD_ITEM_TO_DECOMPOSITION_CONTRACT', 1, {
 					contractId: vContractId,
