@@ -480,7 +480,7 @@ module.exports = function LetMeFish(mod) {
 		playerLoc = event;
 	});
 
-	mod.hook('S_LOGIN', mod.majorPatchVersion >= 81 ? 13 : 12, event => {
+	mod.hook('S_LOGIN', mod.majorPatchVersion >= 86 ? 14 : 13, event => {
 		myGameId = event.gameId;
 		invenItems = [];
 		rodId = null;

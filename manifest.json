@@ -1,7 +1,7 @@
 {
 	"files": {
 		"README.md": "f5b4090fd18e9e58ffb26457f34a2dbab8a59b7d558f5648cf13bd194c23f33b",
-		"index.js": "e3e791d832d368d93ee252342bd80efc24a423fc8e0af127e253950d32c9c8cc",
+		"index.js": "a4540daee54eb4d8a09addadc7a6e510aa1e6bd58f0211c490f185f77ceb150e",
 		"module.json": "7707b849da8cd8b1ef750c36e0ab699ae98590f8a7426cd08c9a504c9396b074"
 	},
 	"defs": {
@@ -21,7 +21,7 @@
 		"S_INVEN": 18,
 		"S_ITEMLIST": 1,
 		"S_LOAD_TOPO": 3,
-		"S_LOGIN": [12,13],
+		"S_LOGIN": [13,14],
 		"S_REQUEST_CONTRACT": 1,
 		"S_START_FISHING_MINIGAME": 1,
 		"S_SYSTEM_MESSAGE": 1,
