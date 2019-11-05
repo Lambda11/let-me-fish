@@ -581,7 +581,7 @@ module.exports = function LetMeFish(mod) {
 	{
 		var invenItemsBuffer = [];
 		var invenFirst = true;
-		Hook('S_ITEMLIST', 1, event => {
+		Hook('S_ITEMLIST', 2, event => {
 			if(!enabled) return;
 			
 			if(event.container !== 14)
