@@ -1,7 +1,7 @@
 {
 	"files": {
 		"README.md": "f5b4090fd18e9e58ffb26457f34a2dbab8a59b7d558f5648cf13bd194c23f33b",
-		"index.js": "658673119d557798d2556ddc74916be5c203551ccaf180d31cd16cfaec49462b",
+		"index.js": "2b7daa564d33835e1a9842592a2160ac6885e22ef5b035a50a9dd888460887b1",
 		"module.json": "7707b849da8cd8b1ef750c36e0ab699ae98590f8a7426cd08c9a504c9396b074"
 	},
 	"defs": {
@@ -19,7 +19,7 @@
 		"S_END_PRODUCE": 1,
 		"S_FISHING_BITE": 1,
 		"S_INVEN": 18,
-		"S_ITEMLIST": 2,
+		"S_ITEMLIST": [2,3],
 		"S_LOAD_TOPO": 3,
 		"S_LOGIN": [13,14],
 		"S_REQUEST_CONTRACT": 1,
