@@ -215,13 +215,13 @@ module.exports = function LetMeFish(mod) {
 	
 	function reel_the_fish()
 	{
-		mod.toServer("C_START_FISHING_MINIGAME", 1, {});
+		mod.toServer("C_START_FISHING_MINIGAME", mod.majorPatchVersion>=88?2:1, {counter:1, unk:15,});
 	}
 	
 	function catch_the_fish()
 	{
 		statFished++;
-		mod.toServer("C_END_FISHING_MINIGAME", 1, {success:true});
+		mod.toServer("C_END_FISHING_MINIGAME", mod.majorPatchVersion>=88?2:1, {counter:1, unk:24, success:true});
 		mod.setTimeout(throw_the_rod, rng(ACTION_DELAY_THROW_ROD)+500);
 	}
 	
@@ -316,11 +316,11 @@ module.exports = function LetMeFish(mod) {
 				thefishes.length = 0;
 				if(dismantleFish)
 				{
-					 thefishes = invenItems.filter((item) => item.id >= 206400 && item.id <= 206435);
+					 thefishes = invenItems.filter((item) => item.id >= 206400 && item.id <= 206456);
 				}
 				if(dismantleFishGold)
 				{
-					 thefishes = thefishes.concat(invenItems.filter((item) => item.id >= 206500 && item.id <= 206505));
+					 thefishes = thefishes.concat(invenItems.filter((item) => item.id >= 206500 && item.id <= 206514));
 				}
 				if(thefishes.length > 20)
 				{
